@@ -26,36 +26,21 @@
 
 
 # VARIABLES WITH MISSING VALUES:
-# 16294 missing in all three of them
-  case Spend area text
-  case Sub spend area text
-  case Spend classification text
+ 3289 cases, with missing values for each variable in 16294 events
+ Missing variables:
+    - case Spend area text
+    - case Sub spend area text
+    - case Spend classification text
+ For each case with missing values, each activity in this case has these values missing
+ Filled these columns for missing values with "Other"
+    (1) Keep cases because missing does not imply faulty data
+    (2) Missing of these values might be relevant predictor itself
 
-
-  <class 'pandas.core.frame.DataFrame'>
-  RangeIndex: 1595923 entries, 0 to 1595922
-  Data columns (total 22 columns):
-  eventID                             1595923 non-null int64
-  case Spend area text                1579629 non-null object
-  case Company                        1595923 non-null object
-  case Document Type                  1595923 non-null object
-  case Sub spend area text            1579629 non-null object
-  case Purchasing Document            1595923 non-null int64
-  case Purch. Doc. Category name      1595923 non-null object
-  case Vendor                         1595923 non-null object
-  case Item Type                      1595923 non-null object
-  case Item Category                  1595923 non-null object
-  case Spend classification text      1579629 non-null object
-  case Source                         1595923 non-null object
-  case Name                           1595923 non-null object
-  case GR-Based Inv. Verif.           1595923 non-null bool
-  case Item                           1595923 non-null int64
-  case concept:name                   1595923 non-null object
-  case Goods Receipt                  1595923 non-null bool
-  event User                          1595923 non-null object
-  event org:resource                  1595923 non-null object
-  event concept:name                  1595923 non-null object
-  event Cumulative net worth (EUR)    1595923 non-null float64
-  event time:timestamp                1595923 non-null object
-  dtypes: bool(2), float64(1), int64(3), object(16)
-  memory usage: 246.6+ MB
+# EDA:
+Bar plots were created for categorical variables. Insights:
+  (1) Company0000 occurs way more often than any other variable
+  (2) Document Standard PO occurs way more often than Framework order an EC Purchase Other
+  (3) Goods receipt = False almost never occurs,
+      which means that the third category (2-way matching) almost never occurs,
+      as can be seen at the case item category distribution as well
+  (4) more can be seen in FiguresEDA
