@@ -80,7 +80,7 @@ TUESDAY 19/03/2019
   Most purchase documents only have one single purchase item (in fact, the median amount of purchase items per purchase document is 1, 75 percentile is 2)
   Een when looking at the 0.1% of purchase documents with the most purchase items, still 75th percentile is only 131, while maximum amount of purchase items per purchase document is 429.
 
-  Surprisingly, "case Goods Receipt" is a variable of the Pruchasing Document, although GR-based 
+  Surprisingly, "case Goods Receipt" is a variable of the Pruchasing Document, although GR-based
 
 #Which attributes are specific to Purchase Item?  (case concept:name)
 
@@ -89,3 +89,21 @@ TUESDAY 19/03/2019
   -   'case Document Type'
   -   'case Sub spend area text'
   -   'case Purchasing Document'
+
+
+# Datetime outside range handling
+
+There is large amount of events that happen in the future - in 2019 so we also decide to keep 2019 and 2020.
+We drop purchase documents that contain events that happen before 2015 (around 18 docs dropped)
+
+  2018    1550468
+  2019      45135
+  2017        223
+  2008         45
+  2001         22
+  1948         10
+  1993          9
+  2016          6
+  2015          3
+  2020          2
+  Name: Year, dtype: int64
