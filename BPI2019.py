@@ -14,16 +14,20 @@ data.columns = data.columns.str.strip()
 # Fill missing case variables pertaining to case
 data = data.fillna("Other")
 
-# Removal of items with outlier timestamps
-data['Year'] = data['event time:timestamp'].apply(lambda timestamp: int(timestamp[6:10]))
-
+# Convert datetime strings to native datetime64[ns]
 data['event time:timestamp'] = data['event time:timestamp'].apply(lambda t: pd.datetime(int(t[6:10]),int(t[3:5]),int(t[:2]),int(t[11:13]),int(t[14:16]),int(t[17:19])))
 
+# Get 'case Purchasing Document' id's for docs that have events before 2015 & remove outliers
+invalid_purchdocs = data[data['event time:timestamp'].apply(lambda t: t.year) < 2015]['case Purchasing Document'].unique()
+data = data[~data['case Purchasing Document'].isin(invalid_purchdocs)]
 
-data['event time:timestamp'] = pd.to_datetime(data['event time:timestamp'], format="%dd/%mm/%Y %H:%M:%S")
 
 
-data.columns
+
+
+
+
+
 purchdoc_item_counts=data[['case Item','case Purchasing Document']].groupby('case Purchasing Document').nunique()['case Item']
 purchdoc_item_counts.describe()
 purchdoc_item_counts[purchdoc_item_counts==purchdoc_item_counts.max()] #purchasing document 4508073932 has 429 purchase items
