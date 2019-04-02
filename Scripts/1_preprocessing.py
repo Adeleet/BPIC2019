@@ -1,8 +1,10 @@
 import pandas as pd
 import numpy as np
 
+
 # importing main dataset
-data = pd.read_csv("BPI_Challenge_2019.csv", encoding='ANSI', engine="c")
+data = pd.read_csv("Data/0_raw_data.csv.gz",
+                   encoding='ANSI', engine="c")
 
 # Removing whitespace in some columns
 data.columns = data.columns.str.strip()
@@ -22,4 +24,4 @@ invalid_purchdocs = data[data['event time:timestamp'].apply(
 data = data[~data['case Purchasing Document'].isin(invalid_purchdocs)]
 
 # Saving cleaned data to comressed .csv
-data.to_csv("2_preprocessing.gz", index=False, compression='gzip')
+data.to_csv("Data/1_preprocessing.csv.gz", index=False, compression='gzip')

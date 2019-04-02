@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # import cleaned dataset
-data = pd.read_csv("2_preprocessing.gz", compression='gzip',
+data = pd.read_csv("Data/1_preprocessing.csv.gz", compression='gzip',
                    parse_dates=['event time:timestamp'])
 
 
@@ -46,10 +46,10 @@ for var in calculated_per_purchdoc:
     purchdoc_data["mode_" + var] = []
 
 for i in range(len(purchdoc_ids)):
-    # create pd.DataFrame of purchasing document
+    # Create pd.DataFrame of purchasing document
     purchdoc = data[data["case Purchasing Document"] == purchdoc_ids[i]]
     if i % 1000 == 0:
-        print("{}%".format(round((i / 76331 * 100), 2))
+        print("{}%".format(round((i / 76331 * 100), 2)))
     # Add first value of singular_per_purchdoc, since they are all the same
     for col in singular_per_purchdoc:
         purchdoc_data[col].append(purchdoc[col].values[0])
@@ -59,7 +59,7 @@ for i in range(len(purchdoc_ids)):
         purchdoc_data["num_" + col].append(purchdoc[col].nunique())
         purchdoc_data["mode_" + col].append(purchdoc[col].mode()[0])
 
-    # Add (1) Boolean if Cumulative net worth changes and (2) mean
+    # Add (1) Boolean if Cumulative net worth changes and (2) mean net worth
     purchdoc_data['net_worth_change'].append(
         purchdoc['event Cumulative net worth (EUR)'].nunique() > 1)
 
@@ -81,7 +81,7 @@ for i in range(len(purchdoc_ids)):
     purchdoc_data['end_date'].append(purchdoc['event time:timestamp'].min())
 
 
-df_purchdocs=pd.DataFrame(
+df_purchdocs = pd.DataFrame(
     purchdoc_data, index=purchdoc_data['case Purchasing Document'])
 
-df_purchdocs.to_csv('3_df_purchdocs.gz', compression='gzip')
+df_purchdocs.to_csv('Data/2_aggregrate_purchdocs.csv.gz', compression='gzip')
