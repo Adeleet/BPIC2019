@@ -2,3 +2,6 @@
 *.gdoc
 *.ini
 *.png
+*.dsc
+*.pnml
+*.gz
