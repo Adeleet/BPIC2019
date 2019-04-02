@@ -1,7 +1,6 @@
-*.csv
-*.gdoc
+/Data
+/Disco
+/Documents
+/Figures
+/Theory
 *.ini
-*.png
-*.dsc
-*.pnml
-*.gz
