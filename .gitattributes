@@ -1,6 +1,1 @@
-special-vendored-path/* linguist-vendored
-<<<<<<< HEAD
-*.pnml linguist-vendored=true
-=======
-*.pnml linguist-vendored=false
->>>>>>> 739b2935bef77f0119ae4ae875279e3f7dca04e9
+Petri Nets/* linguist-vendored
