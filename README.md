@@ -1,14 +1,16 @@
 # TODO
 
 -   **Preprocessing**
-  -   [Drop] Purchasing Documents from years other than 2018, 2019, 2020
-  -   Handle Events happening at the exact same time [Aggregate, add 1ms](<if Vendor Creates invoice OR Receive Order Confirmation happens at the same time as Create Purchase Order Item>)
-  -   Aggregate to Purchasing Documents
+    -   [Drop] Purchasing Documents from years other than 2018, 2019, 2020
+    -   Handle Events happening at the exact same time (Aggregate or add 1ms) if Vendor Creates invoice OR Receive Order Confirmation happens at the same time as Create Purchase Order Item.
+    -   Aggregate to Purchasing Documents
+
 
 
 -   **Process Modeling**
     -   4 Separate Petri Nets per Item Category, extract MultiPerspective Explorer results
     -   Meta Process Model for PO's, aggregating on the 4+ Item-Level Process Models
+
 
 
 -   **Data Analysis & Machine Learning Classification (statistics, correlations, graphs)**
@@ -17,10 +19,12 @@
 
 _Log Move: something was executed while the model said it could not happen at that point_
 
+
 # ProM Packages for Petri Net Creation
 
 -   Data Aware Heuristic Miner
 -   Discover Using State Chart Workbench (M.Leemans)
+
 
 # Variable Specification
 
@@ -49,6 +53,7 @@ _Log Move: something was executed while the model said it could not happen at th
 | event Cumulative net worth (EUR) | cost of purchase at the time of the event     | 25221         | float64 |
 | event time:timestamp             | timestamp of the event                        | 167432        | object  |
 
+
 # Variables with missing values:
 
 -   3289 cases, with missing values for each variable in 16294 events
@@ -60,6 +65,7 @@ _Log Move: something was executed while the model said it could not happen at th
 -   Filled these columns for missing values with "Other"
     -   Keep cases because missing does not imply faulty data
     -   Missing of these values might be relevant predictor itself
+
 
 # Timestamps
 -   Converted strings to to np.datetime64 format
