@@ -1,21 +1,22 @@
 # TODO
 
 -   **Preprocessing**
-    -   [Drop] Purchasing Documents from years other than 2018, 2019, 2020
-    -   Handle Events happening at the exact same time (Aggregate or add 1ms) if Vendor Creates invoice OR Receive Order Confirmation happens at the same time as Create Purchase Order Item.
-    -   Aggregate to Purchasing Documents
+
+    - [x]   [Drop] Purchasing Documents from years other than 2018, 2019, 2020
+    - [ ]   Handle Events happening at the exact same time (Aggregate or add 1ms) if Vendor Creates invoice OR Receive Order Confirmation happens at the same time as Create Purchase Order Item.
+    - [ ]   Aggregate to Purchasing Documents
 
 
 
 -   **Process Modeling**
-    -   4 Separate Petri Nets per Item Category, extract MultiPerspective Explorer results
-    -   Meta Process Model for PO's, aggregating on the 4+ Item-Level Process Models
+    - [ ]   4 Separate Petri Nets per Item Category, extract MultiPerspective Explorer results
+    - [ ]   Meta Process Model for PO's, aggregating on the 4+ Item-Level Process Models
 
 
 
 -   **Data Analysis & Machine Learning Classification (statistics, correlations, graphs)**
-    -   Item-level [x, y] = [Item Data, PetriNet Fit]
-    -   PO level [x, y] = [Item Data, PetriNet Fit]
+    - [ ]   Item-level [x, y] = [Item Data, PetriNet Fit]
+    - [ ]   PO level [x, y] = [Item Data, PetriNet Fit]
 
 _Log Move: something was executed while the model said it could not happen at that point_
 
@@ -39,7 +40,7 @@ _Log Move: something was executed while the model said it could not happen at th
 | case Purch. Doc. Category name   | category of purchase document                 | 1             | object  |
 | case Vendor                      | vendor to which purchase document is sent     | 1975          | object  |
 | case Item Type                   | purchase classification                       | 6             | object  |
-| case Item Category               | purchase main document category               | 4             | object  |
+| case Item Category               | purchase document matching category           | 4             | object  |
 | case Spend classification text   | purchase type classification                  | 3             | object  |
 | case Source                      | system from which purchase originated         | 1             | object  |
 | case Name                        | name/vendor of purchase                       | 1899          | object  |
@@ -71,24 +72,26 @@ _Log Move: something was executed while the model said it could not happen at th
 -   Converted strings to to np.datetime64 format
 -   We only keep the purchasing documents from [2018-2020], drop the rest
 
-| Year | Events  | Purchasing Documents |
-| ---- | ------- | -------------------- |
-| 1948 | 10      | 1                    |
-| 1993 | 9       | 1                    |
-| 2001 | 22      | 15                   |
-| 2008 | 45      | 1                    |
-| 2015 | 3       | 2                    |
-| 2016 | 6       | 3                    |
-| 2017 | 223     | 76                   |
-| 2018 | 1550468 | 76338                |
-| 2019 | 45135   | 11079                |
-| 2020 | 2       | 2                    |
+| Year | Events  | Purchasing Documents starting | Purchasing Documents ending |
+| ---- | ------- | ----------------------------- | --------------------------- |
+| 1948 | 10      | 1                             | 0                           |
+| 1993 | 9       | 1                             | 0                           |
+| 2001 | 22      | 15                            | 0                           |
+| 2008 | 45      | 1                             | 0                           |
+| 2015 | 3       | 2                             | 0                           |
+| 2016 | 6       | 2                             | 0                           |
+| 2017 | 223     | 75                            | 0                           |
+| 2018 | 1550468 | 76241                         | 65268                       |
+| 2019 | 45135   | 11                            | 11079                       |
+| 2020 | 2       | 0                             | 2                           |
+
+
 
 
 
 # Redundant columns
--   Drop "Source" column - has only one unique value]
--   Drop "Event org: resource" - is duplicate to "user" column
+-   Drop "case Source" column and "case Purch. Doc. Category name" (#unique=1)
+-   Drop "event org:resource" - (duplicate of "event User")
 
 # EDA
 Bar plots were created for categorical variables. Insights:
@@ -98,7 +101,7 @@ Bar plots were created for categorical variables. Insights:
 
 # Entity Relationships:
 **Which of the variables is our case key?**
-
+-   case Vendor has multiple case Name's, use case Vendor as primary key for case Name
 -   case Concept Name which corresponds to the Purchase item
 
 -   UML diagram was made
