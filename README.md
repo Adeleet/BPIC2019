@@ -1,5 +1,27 @@
-# VARIABLE SPECIFICATION (description, unique values)
+# TODO
+- **Preprocessing**
+ - [Drop] Purchasing Documents from years other than 2018, 2019, 2020
+ - Handle Events happening at the exact same time [Aggregate, add 1ms] (if Vendor Creates invoice OR Receive Order Confirmation happens at the same time as Create Purchase Order Item)
+ - Aggregate to Purchasing Documents
 
+
+- **Process Modeling**
+  - 4 Separate Petri Nets per Item Category, extract MultiPerspective Explorer results
+  - Meta Process Model for PO's, aggregating on the 4+ Item-Level Process Models
+
+
+
+- **Data Analysis & Machine Learning Classification (statistics, correlations, graphs)**
+  - Item-level [x, y] = [Item Data, PetriNet Fit]
+  - PO level [x, y] = [Item Data, PetriNet Fit]
+
+*Log Move: something was executed while the model said it could not happen at that point*
+
+# ProM Packages for Petri Net Creation
+- Data Aware Heuristic Miner
+- Discover Using State Chart Workbench (M.Leemans)
+
+# Variable Specification
 | name                             | description                                   | unique values | type    |
 | -------------------------------- | --------------------------------------------- | ------------- | ------- |
 | eventID                          | identifier for events                         | 1595923       | int64   |
@@ -25,6 +47,8 @@
 | event Cumulative net worth (EUR) | cost of purchase at the time of the event     | 25221         | float64 |
 | event time:timestamp             | timestamp of the event                        | 167432        | object  |
 
+# Item Type Categories
+
 # Variables with missing values:
 
 -   3289 cases, with missing values for each variable in 16294 events
@@ -44,10 +68,22 @@
 
 # Timestamps
 
--   Convert to datetime
+-   Converted strings to to np.datetime64 format
 
--   Dropped cases with timestamp of the year 1948
--   Need to handle other values; events happening in 2008, 2020, etc.
+| Year | Events | Purchasing Documents |
+| ---- | -- | - |
+| 1948 | 10 | 1 |
+| 1993 | 9 | 1 |
+| 2001 | 22 | 15 |
+| 2008 | 45 | 1 |
+| 2015 | 3 | 2 |
+| 2016 | 6 | 3 |
+| 2017 | 223 | 76 |
+| 2018 | 1550468 | 76338 |
+| 2019 | 45135 | 11079 |
+| 2020 | 2 | 2 |
+
+-   We only keep the purchasing documents from [2018-2020], drop the rest
 
 # Redundant columns
 
@@ -88,38 +124,7 @@ Bar plots were created for categorical variables. Insights:
 
 -   Surprisingly, "case Goods Receipt" is a variable of the Purchasing Document, although GR-based
 
-**Which attributes are specific to Purchase Item? (case concept:name)**
-
--   'case Spend area text'
-
--   'case Company'
-
--   'case Document Type'
-
--   'case Sub spend area text'
-
--   'case Purchasing Document'
-
-# Datetime outside range handling
-
-There is large amount of events that happen in the future - in 2019 so we also decide to keep 2019 and 2020.
-
-We drop purchase documents that contain events that happen before 2015 (around 18 docs dropped)
-
-| Year | Number of Events |
-| ---- | ---------------- |
-| 2018 | 1550468          |
-| 2019 | 45135            |
-| 2017 | 223              |
-| 2008 | 45               |
-| 2001 | 22               |
-| 1948 | 10               |
-| 1993 | 9                |
-| 2016 | 6                |
-| 2015 | 3                |
-| 2020 | 2                |
-
-# Variables that are atomic/singular per Purchasing Document
+# Case variable selection
 
 | Variable                       | Purchasing Document (max unique) | case concept:name (max unique) | Choice              |
 | ------------------------------ | -------------------------------- | ------------------------------ | ------------------- |
