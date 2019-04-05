@@ -1,27 +1,29 @@
 # TODO
-- **Preprocessing**
- - [Drop] Purchasing Documents from years other than 2018, 2019, 2020
- - Handle Events happening at the exact same time [Aggregate, add 1ms] (if Vendor Creates invoice OR Receive Order Confirmation happens at the same time as Create Purchase Order Item)
- - Aggregate to Purchasing Documents
+
+-   **Preprocessing**
+  -   [Drop] Purchasing Documents from years other than 2018, 2019, 2020
+  -   Handle Events happening at the exact same time [Aggregate, add 1ms](<if Vendor Creates invoice OR Receive Order Confirmation happens at the same time as Create Purchase Order Item>)
+  -   Aggregate to Purchasing Documents
 
 
-- **Process Modeling**
-  - 4 Separate Petri Nets per Item Category, extract MultiPerspective Explorer results
-  - Meta Process Model for PO's, aggregating on the 4+ Item-Level Process Models
+-   **Process Modeling**
+    -   4 Separate Petri Nets per Item Category, extract MultiPerspective Explorer results
+    -   Meta Process Model for PO's, aggregating on the 4+ Item-Level Process Models
 
 
+-   **Data Analysis & Machine Learning Classification (statistics, correlations, graphs)**
+    -   Item-level [x, y] = [Item Data, PetriNet Fit]
+    -   PO level [x, y] = [Item Data, PetriNet Fit]
 
-- **Data Analysis & Machine Learning Classification (statistics, correlations, graphs)**
-  - Item-level [x, y] = [Item Data, PetriNet Fit]
-  - PO level [x, y] = [Item Data, PetriNet Fit]
-
-*Log Move: something was executed while the model said it could not happen at that point*
+_Log Move: something was executed while the model said it could not happen at that point_
 
 # ProM Packages for Petri Net Creation
-- Data Aware Heuristic Miner
-- Discover Using State Chart Workbench (M.Leemans)
+
+-   Data Aware Heuristic Miner
+-   Discover Using State Chart Workbench (M.Leemans)
 
 # Variable Specification
+
 | name                             | description                                   | unique values | type    |
 | -------------------------------- | --------------------------------------------- | ------------- | ------- |
 | eventID                          | identifier for events                         | 1595923       | int64   |
@@ -47,60 +49,48 @@
 | event Cumulative net worth (EUR) | cost of purchase at the time of the event     | 25221         | float64 |
 | event time:timestamp             | timestamp of the event                        | 167432        | object  |
 
-# Item Type Categories
-
 # Variables with missing values:
 
 -   3289 cases, with missing values for each variable in 16294 events
-
 -   Missing variables:
-
     -   case Spend area text
     -   case Sub spend area text
     -   case Spend classification text
-
 -   For each case with missing values, each activity in this case has these values missing
-
 -   Filled these columns for missing values with "Other"
-
-    -   (1) Keep cases because missing does not imply faulty data
-    -   (2) Missing of these values might be relevant predictor itself
+    -   Keep cases because missing does not imply faulty data
+    -   Missing of these values might be relevant predictor itself
 
 # Timestamps
-
 -   Converted strings to to np.datetime64 format
-
-| Year | Events | Purchasing Documents |
-| ---- | -- | - |
-| 1948 | 10 | 1 |
-| 1993 | 9 | 1 |
-| 2001 | 22 | 15 |
-| 2008 | 45 | 1 |
-| 2015 | 3 | 2 |
-| 2016 | 6 | 3 |
-| 2017 | 223 | 76 |
-| 2018 | 1550468 | 76338 |
-| 2019 | 45135 | 11079 |
-| 2020 | 2 | 2 |
-
 -   We only keep the purchasing documents from [2018-2020], drop the rest
 
+| Year | Events  | Purchasing Documents |
+| ---- | ------- | -------------------- |
+| 1948 | 10      | 1                    |
+| 1993 | 9       | 1                    |
+| 2001 | 22      | 15                   |
+| 2008 | 45      | 1                    |
+| 2015 | 3       | 2                    |
+| 2016 | 6       | 3                    |
+| 2017 | 223     | 76                   |
+| 2018 | 1550468 | 76338                |
+| 2019 | 45135   | 11079                |
+| 2020 | 2       | 2                    |
+
+
+
 # Redundant columns
-
--   Drop "Source" column - has only one unique value
-
+-   Drop "Source" column - has only one unique value]
 -   Drop "Event org: resource" - is duplicate to "user" column
 
 # EDA
-
 Bar plots were created for categorical variables. Insights:
-
-1.  Company0000 occurs way more often than any other variable
-2.  Document Standard PO occurs way more often than Framework order and EC Purchase Other
-3.  Goods receipt = False almost never occurs, which means that the third category (2-way matching) almost never occurs, as can be seen at the case item category distribution as well
+- Company0000 occurs way more often than any other variable
+- Document Standard PO occurs way more often than Framework order and EC Purchase Other
+- Goods receipt = False almost never occurs, which means that the third category (2-way matching) almost never occurs, as can be seen at the case item category distribution as well
 
 # Entity Relationships:
-
 **Which of the variables is our case key?**
 
 -   case Concept Name which corresponds to the Purchase item
