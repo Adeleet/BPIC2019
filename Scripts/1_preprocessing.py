@@ -52,7 +52,6 @@ POs_before_2018 = data[data['Year'] < 2018]['PO ID'].unique()
 data = data[~data['PO ID'].isin(POs_before_2018)]
 
 
-# Calculate total duration per PO, Item
 def groupby_duration(group):
     """Returns duration in days for each group"""
     timedeltas = group['Event Timestamp'].max(

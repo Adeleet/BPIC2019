@@ -69,7 +69,7 @@ _Log Move: something was executed while the model said it could not happen at th
 
 
 # Timestamps
--   Converted strings to to np.datetime64 format
+-   Converted strings to np.datetime64 format
 -   We only keep the purchasing documents from [2018-2020], drop the rest
 
 | Year | Events  | Purchasing Documents starting | Purchasing Documents ending |
