@@ -1,38 +1,38 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 # import cleaned dataset
 data = pd.read_csv("Data/1_preprocessing.csv.gz", compression='gzip',
-                   parse_dates=['event time:timestamp'])
+                   parse_dates=['Event Timestamp'])
 
 
+data.groupby("case Item Category")["case Purchasing Document"].count()
 purchdoc_ids = data["case Purchasing Document"].unique()
 
 
-singular_per_purchdoc = ['case Spend area text',
-                         'case Company',
-                         'case Document Type',
-                         'case Sub spend area text',
-                         'case Purchasing Document',
-                         'case Purch. Doc. Category name',
-                         'case Vendor',
-                         'case Item Type',
-                         'case Item Category',
-                         'case Spend classification text',
-                         'case Source',
-                         'case Name',
-                         'case GR-Based Inv. Verif.',
-                         'case Goods Receipt']
-nonsingular_per_purchdoc = ['eventID',
-                            'case Item',
-                            'case concept:name',
-                            'event User',
-                            'event org:resource',
-                            'event Cumulative net worth (EUR)',
-                            'event time:timestamp']
-calculated_per_purchdoc = ['case Item',
-                           'case concept:name',
-                           'event User']
+singular_per_purchdoc = ['Item Spend Area',
+                         'PO Company',
+                         'PO Doctype',
+                         'Item Spend Area - Detailed',
+                         'PO ID',
+                         'PO Vendor ID',
+                         'Item Type',
+                         'Item Matching Category',
+                         'Item Class',
+                         'PO Vendor Name',
+                         'Item GR Inv. Verif.',
+                         'PO GR']
+
+nonsingular_per_purchdoc = ['Event ID ',
+                            'Item Code',
+                            'Item ID',
+                            'Event User',
+                            'Event Cumulative Value (EUR)',
+                            'Event Timestamp']
+
+
+calculated_per_purchdoc = ['Item Code', 'Item ID', 'Event User']
+
 
 # Initialize dict to be converted to pd.DataFrame
 purchdoc_data = dict((k, []) for k in singular_per_purchdoc)
@@ -71,17 +71,17 @@ for i in range(len(purchdoc_ids)):
     purchdoc_data['num_events'].append(purchdoc.shape[0])
 
     # Add duration (days) & longest time between 2 events
-    purchdoc_data['total_duration_days'].append((purchdoc['event time:timestamp'].max(
-    ) - purchdoc['event time:timestamp'].min()).value / 8.64e13)
-    purchdoc_data['longest_event_name'].append(purchdoc['event concept:name'].values[purchdoc['event time:timestamp'].diff(
+    purchdoc_data['total_duration_days'].append((purchdoc['Event Timestamp'].max(
+    ) - purchdoc['Event Timestamp'].min()).value / 8.64e13)
+    purchdoc_data['longest_event_name'].append(purchdoc['event concept:name'].values[purchdoc['Event Timestamp'].diff(
     ).values.argmax() - 1])
     purchdoc_data['longest_event_value'].append(
-        purchdoc['event time:timestamp'].diff().max().value / 8.64e13)
-    purchdoc_data['start_date'].append(purchdoc['event time:timestamp'].max())
-    purchdoc_data['end_date'].append(purchdoc['event time:timestamp'].min())
+        purchdoc['Event Timestamp'].diff().max().value / 8.64e13)
+    purchdoc_data['start_date'].append(purchdoc['Event Timestamp'].max())
+    purchdoc_data['end_date'].append(purchdoc['Event Timestamp'].min())
 
 
 df_purchdocs = pd.DataFrame(
-    purchdoc_data, index=purchdoc_data['case Purchasing Document'])
+    purchdoc_data, index=purchdoc_data['PO ID'])
 
 df_purchdocs.to_csv('Data/2_aggregrate_purchdocs.csv.gz', compression='gzip')
