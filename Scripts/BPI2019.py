@@ -10,8 +10,12 @@ sample_data = data[data["Item ID"].isin(data["Item ID"].unique()[:500])]
 
 
 order = EventOrder()
-order.fit(sample_data, verbose=True)
+order.fit(sample_data, immediate=False, verbose=True)
+order.predict_first_event(
+    'Create Purchase Order Item',
+    'Receive Order Confirmation')
 
-events = order.events
 
-order.first_event_probabilities(events[0], events[8])
+order.predict_first_event_probabilities(
+    'Create Purchase Order Item',
+    'Receive Order Confirmation')

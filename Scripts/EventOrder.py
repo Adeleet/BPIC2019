@@ -35,8 +35,8 @@ class EventOrder:
         for i in range(self.sequences.shape[0]):
             if verbose:
                 if (i % max(1, round(self.sequences.shape[0] / 10)) == 0):
-                    print("Sequence {}/{}".format(i +
-                                                  1, self.sequences.shape[0]))
+                    print("Sequence {}/{}".format(i
+                                                  + 1, self.sequences.shape[0]))
 
             sequence = self.sequences[i]
             # Iterate through each event 1 to n - 1 in sequence
@@ -60,8 +60,20 @@ class EventOrder:
             print("Finished generating sequence order of {} sequences in {} seconds.".format(
                 self.sequences.shape[0], str(round(time() - start_time, 1))))
 
-    def first_event_probabilities(self, act1, act2):
-        """Returns probability of act1, act2 happening first"""
+    def predict_first_event(self, act1, act2):
+        """Returns activity with highest probability of happening first"""
+        if act1 not in self.events or act2 not in self.events:
+            raise ValueError(
+                "This EventOrder has not been fitted yet! Please call the .fit method with a dataframe")
+        n_act1 = self.df_event_order[act1][act2]
+        n_act2 = self.df_event_order[act2][act1]
+        if (n_act1 > n_act2) or (n_act1 == 0 and n_act2 == 0):
+            return act1
+        else:
+            return act2
+
+    def predict_first_event_probabilities(self, act1, act2):
+        """Returns probability of act1 and act2 happening first"""
         if act1 not in self.events or act2 not in self.events:
             raise ValueError(
                 "This EventOrder has not been fitted yet! Please call the .fit method with a dataframe")
