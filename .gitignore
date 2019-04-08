@@ -6,3 +6,4 @@
 /Theory
 *.html
 *.ini
+*__pycache__
