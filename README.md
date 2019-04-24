@@ -1,106 +1,123 @@
-# TODO
+### TODO
 
 -   **Preprocessing**
 
-    - [x]   [Drop] Purchasing Documents from years other than 2018, 2019, 2020
-    - [ ]   Handle Events happening at the exact same time (Aggregate or add 1ms) if Vendor Creates invoice OR Receive Order Confirmation happens at the same time as Create Purchase Order Item.
-    - [ ]   Aggregate to Purchasing Documents
-
+    -   [x]   [Drop] Purchasing Documents from years other than 2018, 2019, 2020
+    -   [ ]   Handle Events happening at the exact same time (Aggregate or add 1ms) if Vendor Creates invoice OR Receive Order Confirmation happens at the same time as Create Purchase Order Item.
+    -   [ ]   Aggregate to Purchasing Documents
 
 
 -   **Process Modeling**
-    - [ ]   4 Separate Petri Nets per Item Category, extract MultiPerspective Explorer results
-    - [ ]   Meta Process Model for PO's, aggregating on the 4+ Item-Level Process Models
-
+    -   [ ]   4 Separate Petri Nets per Item Category, extract MultiPerspective Explorer results
+    -   [ ]   Meta Process Model for PO's, aggregating on the 4+ Item-Level Process Models
 
 
 -   **Data Analysis & Machine Learning Classification (statistics, correlations, graphs)**
-    - [ ]   Item-level [x, y] = [Item Data, PetriNet Fit]
-    - [ ]   PO level [x, y] = [Item Data, PetriNet Fit]
+    -   [ ]   Item-level [x, y] = [Item Data, PetriNet Fit]
+    -   [ ]   PO level [x, y] = [Item Data, PetriNet Fit]
 
 _Log Move: something was executed while the model said it could not happen at that point_
 
-
-# ProM Packages for Petri Net Creation
+### ProM Packages for Petri Net Creation
 
 -   Data Aware Heuristic Miner
 -   Discover Using State Chart Workbench (M.Leemans)
 
+# 1 Preprocessing
 
-# Variable Specification
+| **name**                          | description                                   | unique values | type     |
+| --------------------------------- | --------------------------------------------- | ------------- | -------- |
+| **eventID** [Event]               | identifier for events                         | 1595923       | int64    |
+| case Spend area text              | type/class of purchase item                   | 21            | string   |
+| case Company                      | company from which purchase originated        | 4             | string   |
+| case Document Type                | type of order in the case                     | 3             | string   |
+| case Sub spend area text          | type of purchase item                         | 136           | string   |
+| **case Purchasing Document** [PO] | identifier for cases/purchases                | 76349         | int64    |
+| case Purch. Doc. Category name    | category of purchase document                 | 1             | string   |
+| case Vendor                       | vendor to which purchase document is sent     | 1975          | string   |
+| case Item Type                    | purchase classification                       | 6             | string   |
+| case Item Category                | purchase document matching category           | 4             | string   |
+| case Spend classification text    | purchase type classification                  | 3             | string   |
+| case Source                       | system from which purchase originated         | 1             | string   |
+| case Name                         | name/vendor of purchase                       | 1899          | string   |
+| case GR-Based Inv. Verif.         | case Goods Received invoice verification      | 2             | bool     |
+| case Item                         | item type                                     | 490           | int64    |
+| **case concept:name** [Case]      | case identifier                               | 251734        | string   |
+| case Goods Receipt                | flag indicating if 3 way matching is required | 2             | bool     |
+| event User                        | user identifier of the event                  | 628           | string   |
+| event org:resource                | DUPLICATE user identifier of the event        | 628           | string   |
+| event concept:name                | event name/type                               | 42            | string   |
+| event Cumulative net worth (EUR)  | cost of purchase at the time of the event     | 25221         | float64  |
+| event time:timestamp              | timestamp of the event                        | 167432        | datetime |
 
-| name                             | description                                   | unique values | type    |
-| -------------------------------- | --------------------------------------------- | ------------- | ------- |
-| eventID                          | identifier for events                         | 1595923       | int64   |
-| case Spend area text             | type/class of purchase item                   | 21            | object  |
-| case Company                     | company from which purchase originated        | 4             | object  |
-| case Document Type               | type of order in the case                     | 3             | object  |
-| case Sub spend area text         | type of purchase item                         | 136           | object  |
-| case Purchasing Document         | identifier for cases/purchases                | 76349         | int64   |
-| case Purch. Doc. Category name   | category of purchase document                 | 1             | object  |
-| case Vendor                      | vendor to which purchase document is sent     | 1975          | object  |
-| case Item Type                   | purchase classification                       | 6             | object  |
-| case Item Category               | purchase document matching category           | 4             | object  |
-| case Spend classification text   | purchase type classification                  | 3             | object  |
-| case Source                      | system from which purchase originated         | 1             | object  |
-| case Name                        | name/vendor of purchase                       | 1899          | object  |
-| case GR-Based Inv. Verif.        | case Goods Received invoice verification      | 2             | bool    |
-| case Item                        | item type                                     | 490           | int64   |
-| case concept:name                | case identifier                               | 251734        | object  |
-| case Goods Receipt               | flag indicating if 3 way matching is required | 2             | bool    |
-| event User                       | user identifier of the event                  | 628           | object  |
-| event org:resource               | DUPLICATE user identifier of the event        | 628           | object  |
-| event concept:name               | event name/type                               | 42            | object  |
-| event Cumulative net worth (EUR) | cost of purchase at the time of the event     | 25221         | float64 |
-| event time:timestamp             | timestamp of the event                        | 167432        | object  |
+_Table 1 - Variable Specification_
+<br><br><br>
 
+### 1.1 Missing Values
 
-# Variables with missing values:
-
--   3289 cases, with missing values for each variable in 16294 events
+-   3289 **cases**. with missing values in 16294 events.
 -   Missing variables:
-    -   case Spend area text
-    -   case Sub spend area text
-    -   case Spend classification text
--   For each case with missing values, each activity in this case has these values missing
--   Filled these columns for missing values with "Other"
-    -   Keep cases because missing does not imply faulty data
-    -   Missing of these values might be relevant predictor itself
+    -   **case Spend area text**
+    -   **case Sub spend area text**
+    -   **case Spend classification text**
+-   For each case with missing values, each activity in this case is
+    missing values for these attributes.
+-   These missing values are filled with value **_Missing_**
+    -   Cases are not removed, as the fact that these values are missing may not indicate faulty data, but intended design as part of the process. (e.g. particular Spend classification does not fall under the available categories, so is left empty.)
+    -   These variables missing from a case may be useful in (causal) analysis of process deviations.
 
+### 1.2 Timestamps
 
-# Timestamps
--   Converted strings to np.datetime64 format
--   We only keep the purchasing documents from [2018-2020], drop the rest
+-   Since the BPI Challenge Description specifies that the date is from purchase orders submitted in 2018, we analyze the events, cases and purchase documents occuring before and after 2018.
+-   The events prior to 2018 have an interesting distribution of events (Table 2), only 3 types of events out of the 42 occur, and they all occur during midnight.
 
-| Year | Events  | Purchasing Documents starting | Purchasing Documents ending |
-| ---- | ------- | ----------------------------- | --------------------------- |
-| 1948 | 10      | 1                             | 0                           |
-| 1993 | 9       | 1                             | 0                           |
-| 2001 | 22      | 15                            | 0                           |
-| 2008 | 45      | 1                             | 0                           |
-| 2015 | 3       | 2                             | 0                           |
-| 2016 | 6       | 2                             | 0                           |
-| 2017 | 223     | 75                            | 0                           |
-| 2018 | 1550468 | 76241                         | 65268                       |
-| 2019 | 45135   | 11                            | 11079                       |
-| 2020 | 2       | 0                             | 2                           |
+| event concept:name               | count | unique | top      | freq |
+| :------------------------------- | ----: | -----: | :------- | ---: |
+| Create Purchase Requisition Item |     7 |      1 | 00:00:00 |    7 |
+| Vendor creates debit memo        |    27 |      1 | 23:59:00 |   27 |
+| Vendor creates invoice           |   284 |      1 | 23:59:00 |  284 |
 
+_Table 2 - Events occuring before 2018_
+<br><br><br>
+Furthermore, we look at the amount of purchasing documents starting and ending each year, and see that there is a significant number of purchasing documents starting or ending after 2018 (Table 3). Since they can be scheduled events, we decided to keep all cases and purchasing orders that do not have any events prior to 2018. The other cases and thus purchasing documents are dropped.
 
+| Year |  Events | Purchasing Documents starting | Purchasing Documents ending |
+| ---: | ------: | ----------------------------: | --------------------------: |
+| 1948 |      10 |                             1 |                           0 |
+| 1993 |       9 |                             1 |                           0 |
+| 2001 |      22 |                            15 |                           0 |
+| 2008 |      45 |                             1 |                           0 |
+| 2015 |       3 |                             2 |                           0 |
+| 2016 |       6 |                             2 |                           0 |
+| 2017 |     223 |                            75 |                           0 |
+| 2018 | 1550468 |                         76241 |                       65268 |
+| 2019 |   45135 |                            11 |                       11079 |
+| 2020 |       2 |                             0 |                           2 |
 
+_Table 3 - Purchasing Documents and Events with Purchasing Order start and end times_
+<br><br><br>
 
+##### Additional Findings for 2018
 
-# Redundant columns
--   Drop "case Source" column and "case Purch. Doc. Category name" (#unique=1)
--   Drop "event org:resource" - (duplicate of "event User")
+-   Peak in events during day 27-30 of the month
+-   Peak in events during 00h-02h, 08h-15h and 21h-24h of the day.
+-   Peak in events during January, December in a year.
 
-# EDA
-Bar plots were created for categorical variables. Insights:
-- Company0000 occurs way more often than any other variable
-- Document Standard PO occurs way more often than Framework order and EC Purchase Other
-- Goods receipt = False almost never occurs, which means that the third category (2-way matching) almost never occurs, as can be seen at the case item category distribution as well
+## 1.3 Redundant columns
 
-# Entity Relationships:
+-   The columns **case Source** and **case Purch. Doc. Category** name are dropped as they contain only 1 value for the entire dataset. (Table 1)
+-   The column **event org:resource** is dropped as it is duplicate to **event User**
+
+## 1.4 Value Counts and Distributions
+
+-   **case Company** is almost always _Company0000_ (99.63%).
+-   **case Document Type** is almost always _Document Standard PO_ (96.49%)
+-   **case Goods Receipt** is almost True (99.63%), this means that the third category (2-way matching) almost never occurs.
+
+# 2 Entity Relationships
+
 **Which of the variables is our case key?**
+
 -   case Vendor has multiple case Name's, use case Vendor as primary key for case Name
 -   case Concept Name which corresponds to the Purchase item
 
@@ -123,8 +140,6 @@ Bar plots were created for categorical variables. Insights:
 
 -   Surprisingly, "case Goods Receipt" is a variable of the Purchasing Document, although GR-based
 
-# Case variable selection
-
 | Variable                       | Purchasing Document (max unique) | case concept:name (max unique) | Choice              |
 | ------------------------------ | -------------------------------- | ------------------------------ | ------------------- |
 | case Goods Receipt             | 1                                | 1                              | Purchasing Document |
@@ -141,3 +156,7 @@ Bar plots were created for categorical variables. Insights:
 | case Spend area text           | 4                                | 1                              | case concept:name   |
 | case Sub spend area text       | 7                                | 1                              | case concept:name   |
 | case Item                      | 429                              | 1                              | case concept:name   |
+
+# 3 Petri Nets & Process Models
+
+# 4 Data Analysis
