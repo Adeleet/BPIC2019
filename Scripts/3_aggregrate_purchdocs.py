@@ -84,4 +84,4 @@ for i in range(len(purchdoc_ids)):
 df_purchdocs = pd.DataFrame(
     purchdoc_data, index=purchdoc_data['PO ID'])
 
-df_purchdocs.to_csv('Data/2_aggregrate_purchdocs.csv.gz', compression='gzip')
+df_purchdocs.to_csv('Data/3_aggregrate_purchdocs.csv.gz', compression='gzip')
