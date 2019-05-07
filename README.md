@@ -119,7 +119,7 @@ _Table 3 - Purchasing Documents and Events with Purchasing Order start and end t
 **Which of the variables is our case key?**
 
 -   case Vendor has multiple case Name's, use case Vendor as primary key for case Name
--   case Concept Name which corresponds to the Purchase item
+-   case concept:name which corresponds to the Purchase item
 
 -   UML diagram was made
 -   What entities do we have?
