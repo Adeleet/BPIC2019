@@ -1,11 +1,10 @@
 """
 Splits preprocessed data into train/test data based on matching category
 
-Generates 12 .csv files, for each of the 4 matching categories:
-    - [item category 100%] :        MatchingCategories/[item category].csv
-    - [item category 80% sample] :  MatchingCategories/Train/[item category].csv
-    - [item category 20% sample] :  MatchingCategories/Test/[item category].csv
+Generates 4 .csv files, for each of the 4 matching categories:
+    - [item category] :        MatchingCategories/[item category].csv
 """
+
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -36,12 +35,4 @@ for match_category, match_dir in MATCH_CATEGORY_DIR_MAPPING.items():
     # Get unique cases (items) for this category
     case_ids = df['case concept:name'].unique()
 
-    # Split into train and test dataset based on cases (items)
-    train_case_ids, test_case_ids = train_test_split(case_ids, test_size=0.2)
-    df_train = df[df['case concept:name'].isin(train_case_ids)]
-    df_test = df[df['case concept:name'].isin(test_case_ids)]
-
-    # Save [train, test, train+test] each to seperate .csv
-    df_train.to_csv(f"{MATCH_PATH}/{match_dir}/train.csv", index=False)
-    df_train.to_csv(f"{MATCH_PATH}/{match_dir}/test.csv", index=False)
-    df_train.to_csv(f"{MATCH_PATH}/{match_dir}/full.csv", index=False)
+    df.to_csv(f"{MATCH_PATH}/{match_dir}/full.csv", index=False)
