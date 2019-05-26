@@ -1,5 +1,7 @@
-from pm4py.objects.log.importer.xes import factory as xes_import_factory
+import os
+
 from pm4py.objects.log.exporter.csv import factory as csv_exporter
+from pm4py.objects.log.importer.xes import factory as xes_import_factory
 
 
 def xes_to_csv(xes_path, csv_path):
@@ -11,3 +13,15 @@ def xes_to_csv(xes_path, csv_path):
     """
     log = xes_import_factory.apply(xes_path)
     csv_exporter.export(log, csv_path)
+
+
+b_path = "../Data/Alignments"
+
+xes_files = [f for f in os.listdir(
+    f"{b_path}/") if f.find(".xes") > 0]
+
+
+for xes_fname in xes_files:
+    xes_path = f"{b_path}/{xes_fname}"
+    csv_path = f"{b_path}/{xes_fname.replace('.xes','.csv')}"
+    xes_to_csv(xes_path, csv_path)
