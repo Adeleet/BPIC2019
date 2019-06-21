@@ -1,27 +1,4 @@
-### TODO
-
--   **Preprocessing**
-
-    -   [x]   [Drop] Purchasing Documents from years other than 2018, 2019, 2020
-    -   [ ]   Handle Events happening at the exact same time (Aggregate or add 1ms) if Vendor Creates invoice OR Receive Order Confirmation happens at the same time as Create Purchase Order Item.
-    -   [ ]   Aggregate to Purchasing Documents
-
-
--   **Process Modeling**
-    -   [ ]   4 Separate Petri Nets per Item Category, extract MultiPerspective Explorer results
-    -   [ ]   Meta Process Model for PO's, aggregating on the 4+ Item-Level Process Models
-
-
--   **Data Analysis & Machine Learning Classification (statistics, correlations, graphs)**
-    -   [ ]   Item-level [x, y] = [Item Data, PetriNet Fit]
-    -   [ ]   PO level [x, y] = [Item Data, PetriNet Fit]
-
-_Log Move: something was executed while the model said it could not happen at that point_
-
-### ProM Packages for Petri Net Creation
-
--   Data Aware Heuristic Miner
--   Discover Using State Chart Workbench (M.Leemans)
+### Business Process Intelligence 2019
 
 # 1 Preprocessing
 
